@@ -1,0 +1,162 @@
+﻿<Window x:Class="SecBot.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SecBot"
+        mc:Ignorable="d"
+        Title="SecBot" Height="600" Width="900"
+        FontFamily="Segoe UI" FontSize="14"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <Style x:Key="ChatButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#2979FF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5393FF"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#0050C5"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="AddTaskButtonStyle" TargetType="Button" BasedOn="{StaticResource ChatButtonStyle}">
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#66BB6A"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#388E3C"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="AsciiArtTextBlock"
+                       Grid.Row="0"
+                       Text="{Binding Source={x:Static local:MainWindow.AsciiArt}, Mode=OneTime}"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       Margin="0,10,0,10"
+                       FontFamily="Consolas"
+                       FontSize="12"
+                       Foreground="#333333"
+                       TextWrapping="Wrap"/>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,5,0,5">
+                <StackPanel x:Name="ChatHistoryStackPanel" VerticalAlignment="Top"/>
+            </ScrollViewer>
+
+            <Grid Grid.Row="2" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="UserInputTextBox"
+                         Grid.Column="0"
+                         Height="40"
+                         Padding="10"
+                         TextWrapping="Wrap"
+                         VerticalContentAlignment="Center"
+                         KeyDown="UserInputTextBox_KeyDown"
+                         BorderBrush="#CCCCCC"
+                         BorderThickness="1"
+                         Background="White"
+                         Margin="0,0,5,0"/>
+                <Button x:Name="SendButton"
+                        Grid.Column="1"
+                        Content="Send"
+                        Width="80"
+                        Height="40"
+                        Click="SendButton_Click"
+                        Style="{StaticResource ChatButtonStyle}"/>
+            </Grid>
+        </Grid>
+
+        <TabControl Grid.Column="1" Margin="10">
+            <TabItem Header="Task Assistant">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Add New Task" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+
+                    <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                        <TextBlock Text="Title:"/>
+                        <TextBox x:Name="TaskTitleTextBox" Padding="5" BorderBrush="#CCCCCC"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Margin="0,0,0,10">
+                        <TextBlock Text="Description: [cite: 4]"/>
+                        <TextBox x:Name="TaskDescriptionTextBox" Padding="5" Height="60" TextWrapping="Wrap" AcceptsReturn="True" BorderBrush="#CCCCCC"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Reminder (days from now): [cite: 4]"/>
+                        <TextBox x:Name="ReminderDaysTextBox" Width="50" Margin="10,0,0,0" Padding="5" TextAlignment="Center" BorderBrush="#CCCCCC"/>
+                    </StackPanel>
+
+                    <Button x:Name="AddTaskButton"
+                            Grid.Row="4"
+                            Content="Add Task"
+                            Height="40"
+                            VerticalAlignment="Top"
+                            Click="AddTaskButton_Click"
+                            Style="{StaticResource AddTaskButtonStyle}"
+                            Margin="0,10,0,20"/>
+
+                    <ScrollViewer Grid.Row="4" VerticalScrollBarVisibility="Auto" Margin="0,60,0,0">
+                        <StackPanel x:Name="TaskListStackPanel" VerticalAlignment="Top"/>
+                    </ScrollViewer>
+
+                    <TextBlock x:Name="TaskStatusTextBlock" Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" Foreground="Gray"/>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Activity Log">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="10">
+                    <StackPanel x:Name="ActivityLogStackPanel" VerticalAlignment="Top"/>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>
